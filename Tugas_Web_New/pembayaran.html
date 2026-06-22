@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pembayaran - Hendri Hungry</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="header">
+    <img src="images/logo.png" alt="Hendri Hungry" class="logo">
+    <nav>
+        <a href="index.html">🏠 Home</a>
+        <a href="menu.html">🍽️ Menu</a>
+        <a href="pembayaran.html" class="active">💳 Pembayaran</a>
+    </nav>
+</div>
+
+<!-- STEP INDICATOR -->
+<div class="step-bar" id="step-bar">
+    <div class="step done" id="step1"><div class="step-circle">✓</div><span>Pilih Menu</span></div>
+    <div class="step-line done-line" id="line1"></div>
+    <div class="step active" id="step2"><div class="step-circle">2</div><span>Keranjang</span></div>
+    <div class="step-line" id="line2"></div>
+    <div class="step" id="step3"><div class="step-circle">3</div><span>Pembayaran</span></div>
+    <div class="step-line" id="line3"></div>
+    <div class="step" id="step4"><div class="step-circle">4</div><span>Konfirmasi</span></div>
+</div>
+
+<!-- ======================== PANEL 1: KERANJANG ======================== -->
+<div class="pay-panel" id="panel-keranjang">
+    <div class="container">
+        <div class="page-header">
+            <h2>🛒 Keranjang Pesanan</h2>
+            <p>Cek kembali pesananmu sebelum bayar</p>
+        </div>
+
+        <div id="empty-msg" class="empty-cart" style="display:none">
+            <div style="font-size:48px;margin-bottom:12px">🍽️</div>
+            <h3>Belum ada pesanan</h3>
+            <p>Yuk pilih menu dulu!</p>
+            <a href="menu.html" class="btn-hero-primary" style="display:inline-block;margin-top:16px">Ke Halaman Menu</a>
+        </div>
+
+        <div id="cart-content">
+            <table class="cart-table" id="tabel">
+                <thead>
+                    <tr>
+                        <th>Menu</th>
+                        <th>Harga Satuan</th>
+                        <th>Jumlah</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody id="cart-body"></tbody>
+            </table>
+
+            <div class="total-card">
+                <div class="total-row"><span>Subtotal</span><span id="sub-val">Rp 0</span></div>
+                <div class="total-row"><span>Biaya Layanan</span><span>Gratis</span></div>
+                <div class="total-row total-final"><span>Total Pembayaran</span><span id="total-val">Rp 0</span></div>
+            </div>
+
+            <div class="action-row">
+                <a href="menu.html" class="btn-reset">← Ubah Pesanan</a>
+                <button class="btn-simpan" onclick="goToStep('bayar')">Lanjut ke Pembayaran →</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ======================== PANEL 2: PEMBAYARAN ======================== -->
+<div class="pay-panel" id="panel-bayar" style="display:none">
+    <div class="container">
+        <div class="page-header">
+            <h2>💳 Pilih Metode Pembayaran</h2>
+            <p>Pilih cara pembayaran yang paling mudah bagimu</p>
+        </div>
+
+        <div class="pay-grid">
+            <!-- KIRI: METODE -->
+            <div>
+                <div class="metode-group">
+                    <!-- TRANSFER -->
+                    <div class="metode-card selected" id="m-transfer" onclick="selectMetode('transfer')">
+                        <div class="metode-radio checked" id="r-transfer"></div>
+                        <div class="metode-icon">🏦</div>
+                        <div>
+                            <div class="metode-name">Transfer Bank</div>
+                            <div class="metode-desc">BCA · Mandiri · BRI · BNI</div>
+                        </div>
+                    </div>
+                    <!-- EWALLET -->
+                    <div class="metode-card" id="m-ewallet" onclick="selectMetode('ewallet')">
+                        <div class="metode-radio" id="r-ewallet"></div>
+                        <div class="metode-icon">📱</div>
+                        <div>
+                            <div class="metode-name">E-Wallet</div>
+                            <div class="metode-desc">GoPay · OVO · DANA</div>
+                        </div>
+                    </div>
+                    <!-- COD -->
+                    <div class="metode-card" id="m-cod" onclick="selectMetode('cod')">
+                        <div class="metode-radio" id="r-cod"></div>
+                        <div class="metode-icon">💵</div>
+                        <div>
+                            <div class="metode-name">Bayar di Tempat (COD)</div>
+                            <div class="metode-desc">Bayar tunai saat makanan tiba</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FORM TRANSFER -->
+                <div id="form-transfer" class="metode-form">
+                    <div class="rekening-card">
+                        <div class="rek-header">📋 Informasi Rekening</div>
+                        <div class="rek-body">
+                            <div class="rek-row"><span>Nama Bank</span><strong>BCA</strong></div>
+                            <div class="rek-row"><span>No. Rekening</span>
+                                <strong class="rek-num">1122 3344 5566
+                                    <button class="copy-btn" onclick="copyRek()">Salin</button>
+                                </strong>
+                            </div>
+                            <div class="rek-row"><span>Atas Nama</span><strong>Hendri Jaya</strong></div>
+                            <div class="rek-row"><span>Jumlah Transfer</span><strong id="jml-transfer" style="color:#ff6a00">Rp 0</strong></div>
+                        </div>
+                        <div class="rek-note">⚠️ Pastikan jumlah transfer sesuai dengan total pesanan</div>
+                    </div>
+                    <div class="upload-section">
+                        <label class="upload-label">
+                            <div class="upload-icon">📤</div>
+                            <div class="upload-title">Upload Bukti Transfer</div>
+                            <div class="upload-sub">Klik atau seret file ke sini (JPG, PNG, PDF)</div>
+                            <input type="file" id="bukti" accept="image/*,application/pdf" onchange="previewFile(this)" style="display:none">
+                        </label>
+                        <div id="file-preview" class="file-preview" style="display:none"></div>
+                    </div>
+                </div>
+
+                <!-- FORM EWALLET -->
+                <div id="form-ewallet" class="metode-form" style="display:none">
+                    <div class="rekening-card">
+                        <div class="rek-header">📱 Nomor E-Wallet</div>
+                        <div class="rek-body">
+                            <div class="ewallet-btns">
+                                <button class="ew-btn active" onclick="setEwallet(this,'GoPay')">GoPay</button>
+                                <button class="ew-btn" onclick="setEwallet(this,'OVO')">OVO</button>
+                                <button class="ew-btn" onclick="setEwallet(this,'DANA')">DANA</button>
+                            </div>
+                            <div class="rek-row" style="margin-top:12px"><span>Nomor</span><strong>0812-3456-7890</strong></div>
+                            <div class="rek-row"><span>Atas Nama</span><strong>Hendri Jaya</strong></div>
+                            <div class="rek-row"><span>Jumlah</span><strong id="jml-ewallet" style="color:#ff6a00">Rp 0</strong></div>
+                        </div>
+                    </div>
+                    <div class="upload-section">
+                        <label class="upload-label">
+                            <div class="upload-icon">📤</div>
+                            <div class="upload-title">Upload Bukti Pembayaran</div>
+                            <div class="upload-sub">Screenshot konfirmasi transfer</div>
+                            <input type="file" id="bukti2" accept="image/*" onchange="previewFile2(this)" style="display:none">
+                        </label>
+                        <div id="file-preview2" class="file-preview" style="display:none"></div>
+                    </div>
+                </div>
+
+                <!-- FORM COD -->
+                <div id="form-cod" class="metode-form" style="display:none">
+                    <div class="rekening-card" style="background:#fffbeb;border-color:#fcd34d">
+                        <div class="rek-header" style="background:#f59e0b">📋 Info COD</div>
+                        <div class="rek-body">
+                            <div class="cod-info">
+                                <div class="cod-item">✅ Siapkan uang tunai sejumlah <strong id="jml-cod">Rp 0</strong></div>
+                                <div class="cod-item">✅ Pastikan ada orang di lokasi saat makanan diantar</div>
+                                <div class="cod-item">✅ Periksa makanan sebelum membayar</div>
+                                <div class="cod-item">✅ Kurir akan konfirmasi via WhatsApp sebelum tiba</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-lbl">Masukkan Nomor WhatsApp</label>
+                        <input type="tel" class="form-inp" id="wa-num" placeholder="Contoh: 0812-3456-7890">
+                    </div>
+                </div>
+            </div>
+
+            <!-- KANAN: RINGKASAN -->
+            <div class="summary-box">
+                <div class="summary-title">📋 Ringkasan Pesanan</div>
+                <div id="summary-items"></div>
+                <div class="summary-divider"></div>
+                <div class="summary-row"><span>Subtotal</span><span id="sum-sub">Rp 0</span></div>
+                <div class="summary-row"><span>Biaya Layanan</span><span>Gratis</span></div>
+                <div class="summary-row total"><span>Total</span><span id="sum-total">Rp 0</span></div>
+            </div>
+        </div>
+
+        <div class="action-row" style="margin-top:1.5rem">
+            <button class="btn-reset" onclick="goToStep('keranjang')">← Kembali</button>
+            <button class="btn-simpan" onclick="kirimBukti()">Konfirmasi Pesanan ✓</button>
+        </div>
+        <div id="pesan" class="notif-box" style="display:none"></div>
+    </div>
+</div>
+
+<!-- ======================== PANEL 3: KONFIRMASI ======================== -->
+<div class="pay-panel" id="panel-konfirmasi" style="display:none">
+    <div class="container">
+        <div class="konfirmasi-wrap">
+            <div class="konfirmasi-icon">✅</div>
+            <h2>Pesanan Berhasil!</h2>
+            <p>Terima kasih sudah memesan di <strong>Hendri Hungry</strong>!</p>
+
+            <div class="order-id-box">
+                <span>Nomor Pesanan</span>
+                <strong id="order-id">#HH-000000</strong>
+            </div>
+
+            <div class="tracking-box">
+                <div class="track-item done3"><div class="track-dot-c">✓</div><div><strong>Pesanan Diterima</strong><br><small id="waktu-pesan">—</small></div></div>
+                <div class="track-item"><div class="track-dot-c pending-c">2</div><div><strong>Sedang Diproses</strong><br><small>Estimasi 5-10 menit</small></div></div>
+                <div class="track-item"><div class="track-dot-c pending-c">3</div><div><strong>Dalam Pengiriman</strong><br><small>Estimasi 15-30 menit</small></div></div>
+                <div class="track-item"><div class="track-dot-c pending-c">4</div><div><strong>Makanan Tiba!</strong></div></div>
+            </div>
+
+            <div class="konfirmasi-detail" id="detail-konfirmasi"></div>
+
+            <div class="action-row" style="justify-content:center;margin-top:1.5rem">
+                <a href="menu.html" class="btn-simpan" style="text-decoration:none">🍽️ Pesan Lagi</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+    <p>© 2024 <strong>Hendri Hungry</strong> — Beli, Makan, Kenyang! 🍴</p>
+</div>
+
+<script>
+var ayam = parseInt(localStorage.getItem('ayam')) || 0;
+var nasi = parseInt(localStorage.getItem('nasi')) || 0;
+var teh  = parseInt(localStorage.getItem('teh'))  || 0;
+var mie = parseInt(localStorage.getItem('mie')) || 0;
+var total = (ayam * 15000) + (nasi * 12000) + (teh * 5000) + (mie * 13000);
+var selectedMetode = 'transfer';
+
+function fmt(n) { return 'Rp ' + n.toLocaleString('id-ID'); }
+
+// BUILD CART
+function buildCart() {
+    if (total === 0) {
+        document.getElementById('empty-msg').style.display = 'block';
+        document.getElementById('cart-content').style.display = 'none';
+        return;
+    }
+    var items = [
+        { name: '🍗 Ayam Goreng', qty: ayam, price: 15000 },
+        { name: '🍳 Nasi Goreng', qty: nasi, price: 12000 },
+        { name: '🧋 Es Teh Manis', qty: teh,  price: 5000  },
+        { name: '🍝 Mie Goreng', qty: mie, price: 13000 }
+    ];
+    var tbody = document.getElementById('cart-body');
+    items.forEach(function(it) {
+        if (it.qty > 0) {
+            var tr = document.createElement('tr');
+            tr.innerHTML = '<td>' + it.name + '</td><td>' + fmt(it.price) + '</td><td>' + it.qty + ' porsi</td><td>' + fmt(it.price * it.qty) + '</td>';
+            tbody.appendChild(tr);
+        }
+    });
+    document.getElementById('sub-val').textContent = fmt(total);
+    document.getElementById('total-val').textContent = fmt(total);
+}
+
+// SUMMARY
+function buildSummary() {
+    var items = [
+        { name: '🍗 Ayam Goreng', qty: ayam, price: 15000 },
+        { name: '🍳 Nasi Goreng', qty: nasi, price: 12000 },
+        { name: '🧋 Es Teh Manis', qty: teh,  price: 5000  },
+        { name: '🍝 Mie Goreng', qty: mie, price: 13000 }
+    ];
+    var html = '';
+    items.forEach(function(it) {
+        if (it.qty > 0) html += '<div class="summary-row"><span>' + it.name + ' x' + it.qty + '</span><span>' + fmt(it.price * it.qty) + '</span></div>';
+    });
+    document.getElementById('summary-items').innerHTML = html;
+    document.getElementById('sum-sub').textContent = fmt(total);
+    document.getElementById('sum-total').textContent = fmt(total);
+    document.getElementById('jml-transfer').textContent = fmt(total);
+    document.getElementById('jml-ewallet').textContent = fmt(total);
+    document.getElementById('jml-cod').textContent = fmt(total);
+}
+
+// STEP NAV
+function goToStep(step) {
+    document.getElementById('panel-keranjang').style.display = 'none';
+    document.getElementById('panel-bayar').style.display = 'none';
+    document.getElementById('panel-konfirmasi').style.display = 'none';
+    if (step === 'keranjang') {
+        document.getElementById('panel-keranjang').style.display = 'block';
+        setStepUI(2);
+    } else if (step === 'bayar') {
+        document.getElementById('panel-bayar').style.display = 'block';
+        buildSummary();
+        setStepUI(3);
+    } else if (step === 'konfirmasi') {
+        document.getElementById('panel-konfirmasi').style.display = 'block';
+        setStepUI(4);
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function setStepUI(active) {
+    for (var i = 1; i <= 4; i++) {
+        var el = document.getElementById('step' + i);
+        el.className = 'step';
+        el.querySelector('.step-circle').textContent = i < active ? '✓' : i;
+        if (i < active) el.classList.add('done');
+        if (i === active) el.classList.add('active');
+        if (i < 4) {
+            var ln = document.getElementById('line' + i);
+            ln.className = 'step-line' + (i < active ? ' done-line' : '');
+        }
+    }
+}
+
+// METODE
+function selectMetode(m) {
+    selectedMetode = m;
+    ['transfer','ewallet','cod'].forEach(function(k) {
+        document.getElementById('m-' + k).classList.toggle('selected', k === m);
+        document.getElementById('r-' + k).classList.toggle('checked', k === m);
+        document.getElementById('form-' + k).style.display = k === m ? 'block' : 'none';
+    });
+}
+
+function setEwallet(btn, name) {
+    document.querySelectorAll('.ew-btn').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+}
+
+function copyRek() {
+    navigator.clipboard.writeText('112233445566').then(function() {
+        var btn = document.querySelector('.copy-btn');
+        btn.textContent = 'Tersalin!';
+        setTimeout(function() { btn.textContent = 'Salin'; }, 2000);
+    });
+}
+
+function previewFile(input) {
+    var preview = document.getElementById('file-preview');
+    if (input.files && input.files[0]) {
+        preview.style.display = 'flex';
+        preview.innerHTML = '📎 ' + input.files[0].name + ' <span style="color:#16a34a;margin-left:8px">✓ Siap dikirim</span>';
+    }
+}
+function previewFile2(input) {
+    var preview = document.getElementById('file-preview2');
+    if (input.files && input.files[0]) {
+        preview.style.display = 'flex';
+        preview.innerHTML = '📎 ' + input.files[0].name + ' <span style="color:#16a34a;margin-left:8px">✓ Siap dikirim</span>';
+    }
+}
+
+// KIRIM
+function kirimBukti() {
+    var pesan = document.getElementById('pesan');
+    if (selectedMetode === 'transfer') {
+        var file = document.getElementById('bukti').files.length;
+        if (!file) { showError('⚠️ Silakan upload bukti transfer terlebih dahulu!'); return; }
+    } else if (selectedMetode === 'ewallet') {
+        var file2 = document.getElementById('bukti2').files.length;
+        if (!file2) { showError('⚠️ Silakan upload bukti pembayaran terlebih dahulu!'); return; }
+    } else if (selectedMetode === 'cod') {
+        var wa = document.getElementById('wa-num').value.trim();
+        if (!wa) { showError('⚠️ Masukkan nomor WhatsApp untuk konfirmasi COD!'); return; }
+    }
+    // SUCCESS
+    var now = new Date();
+    var orderId = '#HH-' + Math.floor(100000 + Math.random() * 900000);
+    document.getElementById('order-id').textContent = orderId;
+    document.getElementById('waktu-pesan').textContent = now.toLocaleDateString('id-ID', { weekday:'long', year:'numeric', month:'long', day:'numeric' }) + ', ' + now.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' });
+    var items = [
+        { name: '🍗 Ayam Goreng', qty: ayam, price: 15000 },
+        { name: '🍳 Nasi Goreng', qty: nasi, price: 12000 },
+        { name: '🧋 Es Teh Manis', qty: teh,  price: 5000  },
+        { name: '🍝 Mie Goreng', qty: mie, price: 13000 }
+    ];
+    var html = '<div class="rek-header">📋 Detail Pesanan</div><div class="rek-body">';
+    items.forEach(function(it) { if (it.qty > 0) html += '<div class="rek-row"><span>' + it.name + ' x' + it.qty + '</span><strong>' + fmt(it.price * it.qty) + '</strong></div>'; });
+    html += '<div class="rek-row" style="border-top:2px solid #ff6a00;margin-top:8px;padding-top:8px"><span>Total Dibayar</span><strong style="color:#ff6a00;font-size:16px">' + fmt(total) + '</strong></div>';
+    html += '<div class="rek-row"><span>Metode</span><strong>' + (selectedMetode === 'transfer' ? 'Transfer Bank' : selectedMetode === 'ewallet' ? 'E-Wallet' : 'COD') + '</strong></div></div>';
+    document.getElementById('detail-konfirmasi').innerHTML = html;
+    localStorage.clear();
+    goToStep('konfirmasi');
+}
+
+function showError(msg) {
+    var pesan = document.getElementById('pesan');
+    pesan.style.display = 'block';
+    pesan.className = 'notif-box notif-error';
+    pesan.innerHTML = msg;
+    setTimeout(function() { pesan.style.display = 'none'; }, 4000);
+}
+
+buildCart();
+setStepUI(2);
+</script>
+</body>
+</html>
+
+
+
