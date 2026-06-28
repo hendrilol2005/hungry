@@ -164,7 +164,7 @@ function simpan() {
 
 function reset() {
     qtys = { ayam: 0, nasi: 0, teh: 0 , mie: 0};
-    ['ayam','nasi','teh'].forEach(function(k) {
+    ['ayam','nasi','teh','mie'].forEach(function(k) {
         document.getElementById(k + '-val').textContent = 0;
         document.getElementById(k + '-sub').textContent = '';
     });
