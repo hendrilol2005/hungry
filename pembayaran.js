@@ -1,6 +1,7 @@
 let ayam = localStorage.getItem("ayam") || 0;
 let nasi = localStorage.getItem("nasi") || 0;
 let teh = localStorage.getItem("teh") || 0;
+let mie = localStorage.getItem("mie") || 0;
 
 let total = 0;
 let tabel = document.getElementById("tabel");
@@ -16,8 +17,9 @@ function tambah(nama, qty, harga) {
         let row = tabel.insertRow();
 
         row.insertCell(0).innerHTML = nama;
-        row.insertCell(1).innerHTML = qty;
-        row.insertCell(2).innerHTML = formatRupiah(harga * qty);
+        row.insertCell(1).innerHTML = formatRupiah(harga);
+        row.insertCell(2).innerHTML = qty;
+        row.insertCell(3).innerHTML = formatRupiah(harga * qty);
 
         total += harga * qty;
     }
@@ -26,10 +28,12 @@ function tambah(nama, qty, harga) {
 tambah("Ayam Goreng", ayam, 15000);
 tambah("Nasi Goreng", nasi, 12000);
 tambah("Es Teh Manis", teh, 5000);
+tambah("Mie Goreng", mie, 13000);
 
-document.getElementById("total").innerHTML = formatRupiah(total);
+document.getElementById("sub-val").innerHTML = formatRupiah(total);
+document.getElementById("total-val").innerHTML = formatRupiah(total);
 
-function kirim() {
+function kirimBukti() {
     let file = document.getElementById("bukti").value;
 
     if (file === "") {
